@@ -2,13 +2,9 @@ const express = require('express');
 const app = express();
 const mysql = require('mysql2');
 require('dotenv').config();
+const config = require('./config');
 
-const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME
-});
+const db = mysql.createConnection(config);
 
 db.connect((err) => {
     if (err) {
