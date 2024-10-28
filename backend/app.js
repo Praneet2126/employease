@@ -3,8 +3,14 @@ const app = express();
 const mysql = require('mysql2');
 require('dotenv').config();
 const config = require('./config');
+const cors = require('cors');
+const bodyParser = require("body-parser");
 
 const db = mysql.createConnection(config);
+
+app.use(cors({ methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
+app.use(bodyParser.json());
+app.use(express.json());
 
 db.connect((err) => {
     if (err) {
