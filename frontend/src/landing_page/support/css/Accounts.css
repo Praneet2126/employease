@@ -1,0 +1,101 @@
+#jobSearchHero {
+    background-color: #f9f9f9;
+    padding: 40px 0;
+}
+
+#searchWrapper {
+    text-align: center;
+    background-color: #387ed1;
+    color: white;
+    padding: 40px;
+    margin-bottom: 30px;
+    border-radius: 10px;
+}
+
+#searchWrapper h4 {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.track {
+    text-decoration: none;
+    color: white;
+    font-size: 1.2em;
+}
+
+.track:hover {
+    color: black;
+}
+
+#jobSearchDiv {
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 40px;
+}
+
+#jobSearchDiv h2 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+input[type="text"]::placeholder {
+    color: #aaa;
+}
+
+.link {
+    display: block;
+    margin-bottom: 10px;
+    text-decoration: none;
+    font-size: large;
+    color: #387ed1;
+    line-height: 1.9;
+}
+
+.link:hover {
+    color: black;
+}
+
+ol {
+    padding-left: 20px;
+}
+
+ol li {
+    margin-bottom: 15px;
+}
+
+ol li a {
+    text-decoration: none;
+    color: #387ed1;
+    font-size: 1.2em;
+}
+
+ol li a:hover {
+    color: black;
+}
+
+h1 {
+    margin-bottom: 40px;
+}
+
+h2 {
+    margin-bottom: 15px;
+    font-size: 160%;
+    opacity: 90%;
+}
+
+.col-4 {
+    margin-bottom: 50px;
+    padding: 2%;
+}

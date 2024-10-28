@@ -1,0 +1,52 @@
+src/
+│
+├── components/
+│   ├── auth/
+│   │   ├── Login.js
+│   │   ├── Register.js
+│   │   ├── ProtectedRoute.js
+│   ├── dashboard/
+│   │   ├── JobseekerDashboard.js
+│   │   ├── EmployerDashboard.js
+│   │   ├── AdminDashboard.js
+│   ├── jobs/
+│   │   ├── JobList.js
+│   │   ├── JobItem.js
+│   │   ├── JobDetails.js
+│   │   ├── JobSearch.js
+│   │   ├── JobFilter.js
+│   ├── jobPosting/
+│   │   ├── JobPostingForm.js
+│   │   ├── JobPostingList.js
+│   │   ├── JobPostingEdit.js
+│   ├── profile/
+│   │   ├── ProfileView.js
+│   │   ├── ProfileEdit.js
+│   │   ├── ProfileForm.js
+│   ├── resume/
+│   │   ├── ResumeUpload.js
+│   │   ├── ResumeView.js
+│   │   ├── ResumeEdit.js
+│   ├── applications/
+│   │   ├── JobApplication.js
+│   │   ├── ApplyJob.js
+│   ├── vacancies/
+│   │   ├── VacancyList.js
+│   │   ├── VacancyForm.js
+│   │   ├── VacancyDetails.js
+│   ├── results/
+│   │   ├── ResultsList.js
+│   │   ├── ResultItem.js
+│   ├── common/
+│   │   ├── Navbar.js
+│   │   ├── Footer.js
+│   │   ├── NotFound.js
+│   └── forms/
+│       ├── FormValidation.js
+│
+├── services/
+│   ├── api.js
+│   └── auth.js
+│
+├── App.js
+└── index.js
