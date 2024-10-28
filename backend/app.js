@@ -2,15 +2,15 @@ const express = require('express');
 const app = express();
 const mysql = require('mysql2');
 require('dotenv').config();
-const config = require('./config');
 const cors = require('cors');
 const bodyParser = require("body-parser");
 
-const db = mysql.createConnection(config);
-
-app.use(cors({ methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
-app.use(bodyParser.json());
-app.use(express.json());
+const db = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME
+});
 
 db.connect((err) => {
     if (err) {
@@ -19,6 +19,11 @@ db.connect((err) => {
     }
     console.log('Connected to the MySQL database');
 });
+
+app.use(cors({ methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
+app.use(bodyParser.json());
+app.use(express.json());
+
 
 app.get("/",(req,res)=>{
     res.send("Homepage");
