@@ -1,16 +1,18 @@
 import React from "react";
 import jobs from "../../data/jobs";
+import "./Job.css"; // Import the CSS file
 
 function JobsPage() {
   return (
-    <div className="d-flex flex-wrap justify-content-start">
+    <div className="jobs-container">
       {jobs.map(job => (
-        <div className="card m-3" style={{ width: "18rem" }} key={job.job_id}>
-          {/* <img className="card-img-top" src="https://via.placeholder.com/150" alt="Card image cap" /> */}
-          <div className="card-body">
-            <h5 className="card-title">{job.title}</h5>
-            <p className="card-text">{job.description}</p>
-            <p><strong>Location:</strong> {job.location}</p>
+        <div className="job-card" key={job.job_id}>
+          {/* Uncomment the image line if you have an image source */}
+          {/* <img className="job-card-img" src={job.image || "https://via.placeholder.com/150"} alt={`${job.title} image`} /> */}
+          <div className="job-card-body">
+            <h5 className="job-card-title">{job.title}</h5>
+            <p className="job-card-text">{job.description}</p>
+            <p className="job-card-location"><strong>Location:</strong> {job.location}</p>
           </div>
         </div>
       ))}
