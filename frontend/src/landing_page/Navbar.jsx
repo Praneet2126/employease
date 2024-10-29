@@ -41,7 +41,7 @@ function Navbar() {
                 </Link>
               </li>
               <li class="nav-item">
-                <Link class="nav-link active" to="/products">
+                <Link class="nav-link active" to="/jobs">
                   Jobs
                 </Link> 
               </li>
