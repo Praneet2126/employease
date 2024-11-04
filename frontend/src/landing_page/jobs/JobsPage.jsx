@@ -4,7 +4,9 @@ import "./Job.css";
 
 function JobsPage() {
   return (
-    <div className="jobs-container" style={{margin:"2rem 2rem 2rem 2rem"}}>
+    <>
+    <h2 style={{textAlign: "center", marginTop: "1rem"}}>Jobs open for you!</h2>
+    <div className="jobs-container p-5">
       {jobs.map(job => (
         <div className="job-card" key={job.job_id} style={{padding:"1rem"}}>
           {/* Uncomment the image line if you have an image source */}
@@ -18,6 +20,7 @@ function JobsPage() {
         </div>
       ))}
     </div>
+    </>
   );
 }
 
