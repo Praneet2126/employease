@@ -4,8 +4,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
-const signupRoute = require('./signup');
-const loginRoute = require("./login");
+const signupRoute = require('./auth/signup');
+const loginRoute = require("./auth/login");
 
 const app = express();
 const PORT = 8080;
