@@ -1,43 +1,7 @@
-CREATE DATABASE hiring_website;
-USE hiring_website;
 
-show tables;
+MODIFY password VARCHAR(255) NOT NULL;
 
-CREATE TABLE Account (
-    person_id VARCHAR(255),
-    username VARCHAR(255),
-    password VARCHAR(255),
-    PRIMARY KEY (person_id)
-);
-
-CREATE TABLE Admin (
-    admin_id VARCHAR(255),
-    PRIMARY KEY (admin_id)
-);
-
-CREATE TABLE Profile (
-    profile_id VARCHAR(255),
-    exp TEXT,
-    bio TEXT,
-    skills VARCHAR(1000),
-    street VARCHAR(255),
-    city VARCHAR(255),
-    pincode CHAR(6),
-    DOB DATE,
-    PRIMARY KEY (profile_id)
-);
-
-CREATE TABLE Person (
-    person_id VARCHAR(255),
-    firstname VARCHAR(255),
-    lastname VARCHAR(255),
-    profile_id VARCHAR(255),
-    admin_id VARCHAR(255),
-    PRIMARY KEY (person_id),
-    FOREIGN KEY (profile_id) REFERENCES Profile(profile_id),
-    FOREIGN KEY (admin_id) REFERENCES Admin(admin_id)
-);
-
+-- Table for Jobseeker
 CREATE TABLE Jobseeker (
     jobseeker_id VARCHAR(255),
     person_id VARCHAR(255),
@@ -47,12 +11,14 @@ CREATE TABLE Jobseeker (
     -- FOREIGN KEY (results_id) REFERENCES Results(results_id)
 );
 
+-- Table for Employer
 CREATE TABLE Employer (
     employer_id VARCHAR(255),
     company_name VARCHAR(255),
     PRIMARY KEY (employer_id)
 );
 
+-- Table for Job
 CREATE TABLE Job (
     job_id VARCHAR(255),
     title VARCHAR(255),
@@ -61,6 +27,7 @@ CREATE TABLE Job (
     PRIMARY KEY (job_id)
 );
 
+-- Table for Jobseeker searching Job
 CREATE TABLE jobseeker_search_job (
     job_id VARCHAR(255),
     jobseeker_id VARCHAR(255),
@@ -69,6 +36,7 @@ CREATE TABLE jobseeker_search_job (
     FOREIGN KEY (jobseeker_id) REFERENCES Jobseeker(jobseeker_id)
 );
 
+-- Table for Resume
 CREATE TABLE Resume (
     resume_id VARCHAR(255),
     jobseeker_id VARCHAR(255),
@@ -78,6 +46,7 @@ CREATE TABLE Resume (
     FOREIGN KEY (jobseeker_id) REFERENCES Jobseeker(jobseeker_id)
 );
 
+-- Table for Employer searching Jobseeker Resume
 CREATE TABLE employer_search_jobseeker (
     resume_id VARCHAR(255),
     employer_id VARCHAR(255),
@@ -86,6 +55,7 @@ CREATE TABLE employer_search_jobseeker (
     FOREIGN KEY (employer_id) REFERENCES Employer(employer_id)
 );
 
+-- Table for Results
 CREATE TABLE Results (
     results_id VARCHAR(255),
     employer_id VARCHAR(255),
@@ -95,6 +65,7 @@ CREATE TABLE Results (
     FOREIGN KEY (jobseeker_id) REFERENCES Jobseeker(jobseeker_id)
 );
 
+-- Table for Vacancies
 CREATE TABLE Vacancies (
     vacancy_id VARCHAR(255),
     job_title VARCHAR(255),
@@ -104,9 +75,15 @@ CREATE TABLE Vacancies (
     FOREIGN KEY (admin_id) REFERENCES Admin(admin_id)
 );
 
+-- Table for Additional Information
 CREATE TABLE Phone (
     profile_id VARCHAR(255),
     ph_no INT,
     PRIMARY KEY (profile_id),
     FOREIGN KEY (profile_id) REFERENCES Profile(profile_id)
 );
+
+
+-- Describing all tables:
+desc Person;
+desc Profile;

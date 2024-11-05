@@ -68,7 +68,7 @@ function Login() {
                         <button type="submit" className="btn btn-primary btn-block">Log in</button>
                     </div>
                     <p className="text-center mt-3">
-                        Don't have an account? <Link to="/signup">Sign up</Link>
+                        Don't have an account? <Link to="/signup">Sign Up</Link>
                     </p>
                 </form>
             </div>
