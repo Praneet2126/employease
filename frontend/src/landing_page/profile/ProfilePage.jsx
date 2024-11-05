@@ -1,10 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Hero from "./Hero.jsx";
-import profile from "../../data/Profile.js";
 import "./Profile.css";
 
 function ProfilePage() {
-  const user = profile[0];
+  const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/profile", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch user profile");
+        }
+
+        const data = await response.json();
+        console.log("User Profile Data:", data);
+        setUser(data.user);
+        setProfile(data.profile);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!user || !profile) {
+    return <div>No user data found</div>;
+  }
+
+  const renderInfo = (info) => {
+    console.log(info);
+    return info ? info : "Information not available";
+  };
 
   return (
     <>
@@ -25,8 +65,8 @@ function ProfilePage() {
                             alt="User-Profile-Image"
                           />
                         </div>
-                        <h6 className="f-w-600">{user.profile_id}</h6>
-                        <p>{user.exp}</p>
+                        <h6 className="f-w-600">{renderInfo(profile.profile_id)}</h6>
+                        <p>{renderInfo(profile.exp)}</p>
                         <i className="mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
                       </div>
                     </div>
@@ -38,9 +78,7 @@ function ProfilePage() {
                         <div className="row">
                           <div className="col-sm-6">
                             <p className="m-b-10 f-w-600">Email</p>
-                            <h6 className="text-muted f-w-400">
-                              rntng@gmail.com
-                            </h6>
+                            <h6 className="text-muted f-w-400">{renderInfo(user.person_id)}</h6>
                           </div>
                           <div className="col-sm-6">
                             <p className="m-b-10 f-w-600">Phone</p>
@@ -50,21 +88,21 @@ function ProfilePage() {
                         <h6 className="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">
                           Biography
                         </h6>
-                        <p className="text-muted f-w-400">{user.bio}</p>
+                        <p className="text-muted f-w-400">{renderInfo(profile.bio)}</p>
                         <h6 className="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">
                           Skills
                         </h6>
-                        <p className="text-muted f-w-400">{user.skills}</p>
+                        <p className="text-muted f-w-400">{renderInfo(profile.skills)}</p>
                         <h6 className="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">
                           Address
                         </h6>
                         <p className="text-muted f-w-400">
-                          {user.street}, {user.city}, {user.pincode}
+                          {renderInfo(profile.street)}, {renderInfo(profile.city)}, {renderInfo(profile.pincode)}
                         </p>
                         <h6 className="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">
                           Date of Birth
                         </h6>
-                        <p className="text-muted f-w-400">{user.DOB}</p>
+                        <p className="text-muted f-w-400">{renderInfo(profile.DOB)}</p>
                         <ul className="social-link list-unstyled m-t-40 m-b-10">
                           <li>
                             <a href="#!" data-toggle="tooltip" title="facebook">
@@ -77,11 +115,7 @@ function ProfilePage() {
                             </a>
                           </li>
                           <li>
-                            <a
-                              href="#!"
-                              data-toggle="tooltip"
-                              title="instagram"
-                            >
+                            <a href="#!" data-toggle="tooltip" title="instagram">
                               <i className="mdi mdi-instagram feather icon-instagram instagram"></i>
                             </a>
                           </li>

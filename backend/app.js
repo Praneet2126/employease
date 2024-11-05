@@ -3,9 +3,11 @@ const mysql = require('mysql2');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config();
+const cookieParser = require('cookie-parser'); 
 
 const signupRoute = require('./auth/signup');
 const loginRoute = require("./auth/login");
+const profileRoute = require('./auth/profile');
 
 const app = express();
 const PORT = 8080;
@@ -25,12 +27,19 @@ db.connect((err) => {
     console.log('Connected to the MySQL database');
 });
 
-app.use(cors({ methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
+app.use(cors({
+    origin: 'http://localhost:5173', 
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+}));
+
 app.use(bodyParser.json());
 app.use(express.json());
+app.use(cookieParser());
 
 app.use('/signup', signupRoute(db));
 app.use('/login',loginRoute(db));
+app.use('/profile', profileRoute(db));
 
 app.get("/", (req, res) => {
     res.send("Homepage");

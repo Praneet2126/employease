@@ -25,7 +25,7 @@ root.render(
       <Route path='/login' element={<Login />} />
       <Route path='/about' element={<AboutPage />} />
       <Route path='/jobs' element={<JobsPage />} />
-      <Route path='/pricing' element={<ProfilePage />} />
+      <Route path='/profile' element={<ProfilePage />} />
       <Route path='/support' element={<SupportPage />} />
       <Route path='*' element={<NotFound />} />
     </Routes>

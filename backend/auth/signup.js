@@ -32,18 +32,30 @@ module.exports = (db) => {
                                 return res.status(500).json({ error: "Database error" });
                             }
 
-                            const token = jwt.sign({ userId: email }, SECRET_KEY, { expiresIn: "1h" });
+                            db.query(
+                                'INSERT INTO Profile (profile_id) VALUES (?)',
+                                [email],
+                                (err) => {
+                                    if (err) {
+                                        return res.status(500).json({ error: "Database error" });
+                                    }
 
-                            res.cookie("token", token, {
-                                withCredentials: true,
-                                httpOnly: true,
-                            });
+                                    const token = jwt.sign({ userId: email }, SECRET_KEY, { expiresIn: "1h" });
+                                    console.log(token)
+                                    res.cookie("token", token, {
+                                        httpOnly: true,
+                                        secure: process.env.NODE_ENV === "production", 
+                                        sameSite: "Strict", 
+                                        maxAge: 3600000 
+                                    });
 
-                            res.status(201).json({ message: "User signed up successfully", success: true });
+                                    res.status(201).json({ message: "User signed up successfully", success: true });
+                                }
+                            );
                         }
-                    );
+                    );            
                 }
-            );
+            );            
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: "Internal server error" });

@@ -30,10 +30,12 @@ module.exports = (db) => {
                     }
 
                     const token = jwt.sign({ userId: user.person_id }, SECRET_KEY, { expiresIn: "1h" });
-                    
+                    console.log(token);
                     res.cookie("token", token, {
-                        withCredentials: true,
                         httpOnly: true,
+                        secure: process.env.NODE_ENV === "production", 
+                        sameSite: "Strict", 
+                        maxAge: 3600000
                     });
 
                     res.status(200).json({ message: "User logged in successfully", success: true });
