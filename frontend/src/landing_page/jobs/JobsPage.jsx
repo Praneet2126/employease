@@ -15,7 +15,6 @@ function JobsPage() {
             <h5 className="job-card-title">{job.title}</h5>
             <p className="job-card-text">{job.description}</p>
             <p className="job-card-location"><strong>Location:</strong> {job.location}</p>
-            <button className="btn btn-primary" style={{borderRadius:"10px"}}>Apply</button>
           </div>
         </div>
       ))}
