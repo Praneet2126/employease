@@ -1,6 +1,5 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-
 const router = express.Router();
 
 module.exports = (db) => {
@@ -52,9 +51,12 @@ module.exports = (db) => {
     router.put('/update', (req, res) => {
         const { profile_id, exp, bio, skills, street, city, pincode, DOB } = req.body;
 
+        // Format DOB to 'YYYY-MM-DD' if it has a timestamp
+        const formattedDOB = DOB ? DOB.split("T")[0] : null;
+
         db.query(
             'UPDATE Profile SET exp = ?, bio = ?, skills = ?, street = ?, city = ?, pincode = ?, DOB = ? WHERE profile_id = ?',
-            [exp, bio, skills, street, city, pincode, DOB, profile_id],
+            [exp, bio, skills, street, city, pincode, formattedDOB, profile_id],
             (err, result) => {
                 if (err) {
                     console.error("Failed to update profile:", err);

@@ -47,6 +47,13 @@ function EditProfile() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Format the DOB to 'YYYY-MM-DD' if it has a timestamp
+    const formattedProfileData = {
+      ...profileData,
+      DOB: profileData.DOB ? profileData.DOB.split("T")[0] : null,
+    };
+
     try {
       const response = await fetch("http://localhost:8080/profile/update", {
         method: "PUT",
@@ -54,7 +61,7 @@ function EditProfile() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify(profileData),
+        body: JSON.stringify(formattedProfileData),
       });
 
       if (!response.ok) {
