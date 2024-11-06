@@ -1,12 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Login.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const location = useLocation(); 
+    const [message, setMessage] = useState('');
+
+    useEffect(() => {
+        if (location.state?.message) {
+            setMessage(location.state.message);
+            setTimeout(() => {
+                setMessage('');
+            }, 3000);
+        }
+    }, [location.state]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -38,7 +49,11 @@ function Login() {
         <div className="login-container d-flex align-items-center justify-content-center">
             <div className="login-card p-5 shadow-lg">
                 <h2 className="text-center mb-4">Log in to Your Account</h2>
+                
+                {message && <div className="alert alert-success" role='alert'>{message}</div>}
+                
                 {error && <div className="alert alert-danger">{error}</div>}
+                
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
                         <label htmlFor="loginEmail" className="form-label">Email address</label>

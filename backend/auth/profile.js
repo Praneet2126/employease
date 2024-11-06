@@ -40,6 +40,15 @@ module.exports = (db) => {
                             }
 
                             const profile = profileResults.length > 0 ? profileResults[0] : null;
+
+                            if (profile && profile.DOB) {
+                                const formattedDOB = profile.DOB instanceof Date
+                                    ? profile.DOB.toISOString().split("T")[0]
+                                    : profile.DOB.split("T")[0];
+
+                                profile.DOB = formattedDOB;
+                            }
+
                             res.status(200).json({ user, profile });
                         }
                     );
@@ -51,8 +60,7 @@ module.exports = (db) => {
     router.put('/update', (req, res) => {
         const { profile_id, exp, bio, skills, street, city, pincode, DOB } = req.body;
 
-        // Format DOB to 'YYYY-MM-DD' if it has a timestamp
-        const formattedDOB = DOB ? DOB.split("T")[0] : null;
+        const formattedDOB = DOB ? DOB : null;
 
         db.query(
             'UPDATE Profile SET exp = ?, bio = ?, skills = ?, street = ?, city = ?, pincode = ?, DOB = ? WHERE profile_id = ?',

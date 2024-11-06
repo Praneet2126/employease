@@ -27,6 +27,13 @@ db.connect((err) => {
     console.log('Connected to the MySQL database');
 });
 
+const isAuthenticated = (req, res, next) => {
+    if (!req.cookies['token']) {
+        return res.status(401).send({ message: "Unauthorized" });
+    }
+    next();
+};
+
 app.use(cors({
     origin: 'http://localhost:5173', 
     methods: ["GET", "POST", "PUT", "DELETE"],
@@ -38,11 +45,17 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/signup', signupRoute(db));
-app.use('/login',loginRoute(db));
-app.use('/profile', profileRoute(db));
+app.use('/login', loginRoute(db));
+
+app.use('/profile', isAuthenticated, profileRoute(db));
 
 app.get("/", (req, res) => {
     res.send("Homepage");
+});
+
+app.post('/logout', (req, res) => {
+    res.clearCookie("token");
+    res.status(200).send({ message: "Logged out successfully" });
 });
 
 app.listen(PORT, () => {

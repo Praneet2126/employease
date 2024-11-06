@@ -13,11 +13,10 @@ function EditProfile() {
     pincode: "",
     DOB: "",
   });
-
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch current profile data
     async function fetchProfile() {
       try {
         const response = await fetch("http://localhost:8080/profile", {
@@ -26,11 +25,15 @@ function EditProfile() {
           credentials: "include",
         });
         const data = await response.json();
+
         if (data.profile) {
-          setProfileData(data.profile);
+          console.log('Received Profile Data:', data.profile);
+          setProfileData(data.profile); // Set profile data to state
         }
+        setLoading(false);
       } catch (error) {
         console.error("Failed to load profile data", error);
+        setLoading(false);
       }
     }
 
@@ -48,11 +51,10 @@ function EditProfile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Format the DOB to 'YYYY-MM-DD' if it has a timestamp
-    const formattedProfileData = {
-      ...profileData,
-      DOB: profileData.DOB ? profileData.DOB.split("T")[0] : null,
-    };
+    if (!profileData.DOB) {
+      alert("Please select a valid date of birth.");
+      return;
+    }
 
     try {
       const response = await fetch("http://localhost:8080/profile/update", {
@@ -61,7 +63,7 @@ function EditProfile() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify(formattedProfileData),
+        body: JSON.stringify(profileData),
       });
 
       if (!response.ok) {
@@ -70,9 +72,13 @@ function EditProfile() {
 
       navigate("/profile");
     } catch (error) {
-      console.error(error);
+      console.error("Failed to update:", error);
     }
   };
+
+  if (loading) {
+    return <div>Loading profile...</div>;
+  }
 
   return (
     <div className="edit-profile-container">
