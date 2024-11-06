@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Hero from "./Hero.jsx";
 import "./Profile.css";
 import { Link } from "react-router-dom";
-import "./EditProfile.jsx";
 
 function ProfilePage() {
   const [user, setUser] = useState(null);

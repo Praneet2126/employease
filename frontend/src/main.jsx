@@ -10,11 +10,11 @@ import JobsPage from './landing_page/jobs/JobsPage';
 import ProfilePage from './landing_page/profile/ProfilePage';
 import SupportPage from './landing_page/support/SupportPage';
 import Login from './landing_page/login/login';
+import EditProfile from './landing_page/profile/EditProfile';
 
 import Navbar from './landing_page/Navbar';
 import Footer from './landing_page/Footer';
 import NotFound from './landing_page/NotFound';
-import EditProfile from './landing_page/profile/EditProfile';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

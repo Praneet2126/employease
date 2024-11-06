@@ -5,9 +5,7 @@ const router = express.Router();
 
 module.exports = (db) => {
     router.get('/', (req, res) => {
-        console.log("Cookies: ", req.cookies);
         const token = req.cookies ? req.cookies.token : null;
-        console.log(`token is ${token}`);
 
         if (!token) {
             return res.status(401).json({ message: "Unauthorized" });
@@ -19,7 +17,6 @@ module.exports = (db) => {
             }
 
             const userId = decoded.userId;
-            console.log(`UserId is ${userId}`);
 
             db.query(
                 'SELECT * FROM Person WHERE person_id = ?',
@@ -44,13 +41,28 @@ module.exports = (db) => {
                             }
 
                             const profile = profileResults.length > 0 ? profileResults[0] : null;
-                            console.log(`Profile is ${JSON.stringify(profile)}`);
                             res.status(200).json({ user, profile });
                         }
                     );
                 }
             );
         });
+    });
+
+    router.put('/update', (req, res) => {
+        const { profile_id, exp, bio, skills, street, city, pincode, DOB } = req.body;
+
+        db.query(
+            'UPDATE Profile SET exp = ?, bio = ?, skills = ?, street = ?, city = ?, pincode = ?, DOB = ? WHERE profile_id = ?',
+            [exp, bio, skills, street, city, pincode, DOB, profile_id],
+            (err, result) => {
+                if (err) {
+                    console.error("Failed to update profile:", err);
+                    return res.status(500).json({ message: "Failed to update profile" });
+                }
+                res.status(200).json({ message: "Profile updated successfully" });
+            }
+        );
     });
 
     return router;
