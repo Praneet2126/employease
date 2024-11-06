@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Hero from "./Hero.jsx";
 import "./Profile.css";
+import { Link } from "react-router-dom";
+import "./EditProfile.jsx";
 
 function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -49,7 +51,7 @@ function ProfilePage() {
   return (
     <>
       <div className="container mt-5">
-        <Hero />
+        <Hero user={user}/>
         <div className="page-content page-container" id="page-content">
           <div className="padding">
             <div className="row container d-flex justify-content-center">
@@ -129,6 +131,7 @@ function ProfilePage() {
           </div>
         </div>
       </div>
+      <h4><center><Link to="/editProfile"> Edit Your Profile </Link></center></h4>
     </>
   );
 }

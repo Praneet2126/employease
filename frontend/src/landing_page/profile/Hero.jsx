@@ -1,9 +1,9 @@
 import React from "react";
 
-function Hero() {
+function Hero({user}) {
   return (
     <>
-      <h1 className="mb-5" style={{textAlign:"center"}}>Your profile here</h1>
+      <h1 className="mb-5" style={{textAlign:"center"}}>Welcome, {user.username}</h1>
     </>
   );
 }
