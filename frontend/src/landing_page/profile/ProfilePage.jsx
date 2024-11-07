@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Hero from "./Hero.jsx";
 import "./Profile.css";
+import OpenAccount from "../OpenAccount.jsx";
 
 function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -81,7 +82,11 @@ function ProfilePage() {
   }
 
   if (!user || !profile) {
-    return <div>No user data found</div>;
+    return <div className="mt-5 mb-5" style={{textAlign:"center"}}>
+      <img src="media/images/no-data.png" alt="No data" />
+      <h2>No Data Found</h2>
+      <OpenAccount/>
+    </div>;
   }
 
   return (
@@ -167,7 +172,7 @@ function ProfilePage() {
 
       <h4>
         <center>
-          <Link to="/editProfile"> Edit Your Profile </Link>
+          <button className="btn btn-primary" style={{padding:"10px"}}><Link to="/editProfile" style={{textDecoration:"none",color:"white",padding:"10px"}}> Edit Your Profile </Link></button>
         </center>
       </h4>
 
