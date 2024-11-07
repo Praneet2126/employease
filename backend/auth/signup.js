@@ -41,7 +41,6 @@ module.exports = (db) => {
                                     }
 
                                     const token = jwt.sign({ userId: email }, SECRET_KEY, { expiresIn: "1h" });
-                                    console.log(token)
                                     res.cookie("token", token, {
                                         httpOnly: true,
                                         secure: process.env.NODE_ENV === "production", 
