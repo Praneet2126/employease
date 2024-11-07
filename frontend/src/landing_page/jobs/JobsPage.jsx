@@ -6,6 +6,7 @@ function JobPage() {
   const [jobs, setJobs] = useState([]);
   const [alert, setAlert] = useState({ message: "", type: "" });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchJobs();
@@ -30,7 +31,7 @@ function JobPage() {
       if (response.ok) {
         setIsAuthenticated(true);
       } else {
-        setIsAuthenticated(false);
+        setIsAuthenticated(false); 
       }
     } catch (error) {
       console.error("Error checking authentication:", error);
@@ -58,6 +59,14 @@ function JobPage() {
     }
   };
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredJobs = jobs.filter((job) =>
+    job.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   useEffect(() => {
     if (alert.message) {
       const timer = setTimeout(() => setAlert({ message: "", type: "" }), 3000);
@@ -75,27 +84,42 @@ function JobPage() {
 
       <h2 style={{ textAlign: "center", marginTop: "1rem" }}>Jobs open for you!</h2>
 
+      <div className="text-center mb-4 mt-4 Job-search">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Search jobs by title. (Ex:Web developer)"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          style={{ border:"2px solid grey",width: "60%", margin: "0 auto",borderRadius:"0.7rem" }}
+        />
+      </div>
+
       <div className="jobs-container p-5">
-        {jobs.map((job) => (
-          <div className="job-card" key={job.job_id} style={{ padding: "1rem" }}>
-            <div className="job-card-body">
-              <h5 className="job-card-title">{job.title}</h5>
-              <p className="job-card-text">{job.description}</p>
-              <p className="job-card-location">
-                <strong>Location:</strong> {job.location}
-              </p>
-              {isAuthenticated && (
-                <button
-                  className="btn btn-danger"
-                  onClick={() => handleDelete(job.job_id)}
-                  style={{ marginTop: "0.5rem" }}
-                >
-                  Delete Job
-                </button>
-              )}
+        {filteredJobs.length > 0 ? (
+          filteredJobs.map((job) => (
+            <div className="job-card" key={job.job_id} style={{ padding: "1rem" }}>
+              <div className="job-card-body">
+                <h5 className="job-card-title">{job.title}</h5>
+                <p className="job-card-text">{job.description}</p>
+                <p className="job-card-location">
+                  <strong>Location:</strong> {job.location}
+                </p>
+                {isAuthenticated && (
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDelete(job.job_id)}
+                    style={{ marginTop: "0.5rem" }}
+                  >
+                    Delete Job
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p>No jobs found matching your search criteria.</p>
+        )}
       </div>
 
       {isAuthenticated && (
