@@ -11,6 +11,7 @@ import ProfilePage from './landing_page/profile/ProfilePage';
 import SupportPage from './landing_page/support/SupportPage';
 import Login from './landing_page/login/login';
 import EditProfile from './landing_page/profile/EditProfile';
+import CreateJobForm from './landing_page/jobs/CreateJobForm';
 
 import Navbar from './landing_page/Navbar';
 import Footer from './landing_page/Footer';
@@ -26,6 +27,7 @@ root.render(
       <Route path='/login' element={<Login />} />
       <Route path='/about' element={<AboutPage />} />
       <Route path='/jobs' element={<JobsPage />} />
+      <Route path='/create-job' element={<CreateJobForm/>}/>
       <Route path='/profile' element={<ProfilePage />} />
       <Route path='/editProfile' element={<EditProfile />} />
       <Route path='/support' element={<SupportPage />} />
