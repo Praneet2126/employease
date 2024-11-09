@@ -8,6 +8,7 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [isEmployer, setIsEmployer] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -15,11 +16,11 @@ function Signup() {
     try {
       const response = await fetch("http://localhost:8080/signup", {
         method: "POST",
-        credentials: 'include',
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, username, password }),
+        body: JSON.stringify({ email, username, password, isEmployer }),
       });
 
       const data = await response.json();
@@ -84,6 +85,17 @@ function Signup() {
               required
             />
           </div>
+
+          <div className="mb-3">
+            <input
+              type="checkbox"
+              id="isEmployer"
+              checked={isEmployer}
+              onChange={(e) => setIsEmployer(e.target.checked)}
+            />
+            <label htmlFor="isEmployer">Register as Employer</label>
+          </div>
+
           <div className="d-grid">
             <button type="submit" className="btn btn-primary btn-block">
               Sign up

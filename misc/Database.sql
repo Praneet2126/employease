@@ -83,6 +83,7 @@ CREATE TABLE Phone (
     FOREIGN KEY (profile_id) REFERENCES Profile(profile_id)
 );
 
+ ALTER TABLE Employer ADD Company VARCHAR(255);
 
 -- Describing all tables:
 desc Person;

@@ -3,13 +3,12 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const router = express.Router();
-
 const SECRET_KEY = process.env.JWT_SECRET || "your_jwt_secret";
 
 module.exports = (db) => {
     router.post('/', async (req, res) => {
         try {
-            const { email, username, password } = req.body;
+            const { email, username, password, isEmployer, companyName } = req.body;
 
             db.query(
                 'SELECT * FROM Person WHERE person_id = ?',
@@ -40,21 +39,42 @@ module.exports = (db) => {
                                         return res.status(500).json({ error: "Database error" });
                                     }
 
-                                    const token = jwt.sign({ userId: email }, SECRET_KEY, { expiresIn: "1h" });
-                                    res.cookie("token", token, {
-                                        httpOnly: true,
-                                        secure: process.env.NODE_ENV === "production", 
-                                        sameSite: "Strict", 
-                                        maxAge: 3600000 
-                                    });
+                                    if (isEmployer) {
+                                        db.query(
+                                            'INSERT INTO Employer (employer_id, company_name) VALUES (?, ?)',
+                                            [email, companyName || null],
+                                            (err) => {
+                                                if (err) {
+                                                    return res.status(500).json({ error: "Database error" });
+                                                }
+                                                const token = jwt.sign({ userId: email }, SECRET_KEY, { expiresIn: "1h" });
+                                                res.cookie("token", token, {
+                                                    httpOnly: true,
+                                                    secure: process.env.NODE_ENV === "production",
+                                                    sameSite: "Strict",
+                                                    maxAge: 3600000
+                                                });
 
-                                    res.status(201).json({ message: "User signed up successfully", success: true });
+                                                return res.status(201).json({ message: "Employer signed up successfully", success: true });
+                                            }
+                                        );
+                                    } else {
+                                        const token = jwt.sign({ userId: email }, SECRET_KEY, { expiresIn: "1h" });
+                                        res.cookie("token", token, {
+                                            httpOnly: true,
+                                            secure: process.env.NODE_ENV === "production",
+                                            sameSite: "Strict",
+                                            maxAge: 3600000
+                                        });
+
+                                        res.status(201).json({ message: "User signed up successfully", success: true });
+                                    }
                                 }
                             );
                         }
-                    );            
+                    );
                 }
-            );            
+            );
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: "Internal server error" });
