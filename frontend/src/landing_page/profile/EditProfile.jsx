@@ -12,8 +12,10 @@ function EditProfile() {
     city: "",
     pincode: "",
     DOB: "",
+    company_name: "", // Add company_name field to store employer's company name
   });
   const [loading, setLoading] = useState(true);
+  const [isEmployer, setIsEmployer] = useState(false); // To track if the user is an employer
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,20 +27,41 @@ function EditProfile() {
           credentials: "include",
         });
         const data = await response.json();
-
         if (data.profile) {
-          console.log('Received Profile Data:', data.profile);
-          setProfileData(data.profile); // Set profile data to state
+          setProfileData(data.profile);
         }
+  
+        const employerResponse = await fetch(
+          "http://localhost:8080/profile/get-company-name",
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+          }
+        );
+        const employerData = await employerResponse.json();
+        
+        // Debugging employer data
+        console.log('Fetched employer data:', employerData);
+  
+        if (employerData && employerData.company_name) {
+          setIsEmployer(true);  // Set isEmployer to true
+          setProfileData((prevData) => ({
+            ...prevData,
+            company_name: employerData.company_name,
+          }));
+        }
+  
         setLoading(false);
       } catch (error) {
         console.error("Failed to load profile data", error);
         setLoading(false);
       }
     }
-
+  
     fetchProfile();
-  }, []);
+  }, []);  
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -70,6 +93,25 @@ function EditProfile() {
         throw new Error("Failed to update profile");
       }
 
+      // If user is an employer, update the company name
+      if (isEmployer && profileData.company_name) {
+        const companyNameResponse = await fetch(
+          "http://localhost:8080/profile/update-company-name",
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({ company_name: profileData.company_name }),
+          }
+        );
+
+        if (!companyNameResponse.ok) {
+          throw new Error("Failed to update company name");
+        }
+      }
+
       navigate("/profile");
     } catch (error) {
       console.error("Failed to update:", error);
@@ -83,7 +125,10 @@ function EditProfile() {
   return (
     <div className="edit-profile-container">
       <h2 className="edit-profile-title mt-4">Edit Profile</h2>
-      <form onSubmit={handleSubmit} className="edit-profile-form shadow p-4 rounded">
+      <form
+        onSubmit={handleSubmit}
+        className="edit-profile-form shadow p-4 rounded"
+      >
         <div className="form-group mb-3">
           <label htmlFor="exp">Experience</label>
           <input
@@ -105,17 +150,33 @@ function EditProfile() {
             onChange={handleChange}
           ></textarea>
         </div>
-        <div className="form-group mb-3">
-          <label htmlFor="skills">Skills</label>
-          <input
-            type="text"
-            className="form-control"
-            id="skills"
-            name="skills"
-            value={profileData.skills}
-            onChange={handleChange}
-          />
-        </div>
+
+        {isEmployer ? (
+          <div className="form-group mb-3">
+            <label htmlFor="company_name">Company Name</label>
+            <input
+              type="text"
+              className="form-control"
+              id="company_name"
+              name="company_name"
+              value={profileData.company_name}
+              onChange={handleChange}
+            />
+          </div>
+        ) : (
+          <div className="form-group mb-3">
+            <label htmlFor="skills">Skills</label>
+            <input
+              type="text"
+              className="form-control"
+              id="skills"
+              name="skills"
+              value={profileData.skills}
+              onChange={handleChange}
+            />
+          </div>
+        )}
+
         <div className="form-group mb-3">
           <label htmlFor="street">Street</label>
           <input
