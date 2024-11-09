@@ -10,6 +10,9 @@ const loginRoute = require("./auth/login");
 const profileRoute = require("./auth/profile");
 const jobRoutes = require("./JobRoute/job");
 
+const jwt = require("jsonwebtoken");
+const SECRET_KEY = process.env.JWT_SECRET || "your_jwt_secret";
+
 const app = express();
 const PORT = 8080;
 
@@ -29,10 +32,17 @@ db.connect((err) => {
 });
 
 const isAuthenticated = (req, res, next) => {
-  if (!req.cookies["token"]) {
+  const token = req.cookies["token"];
+  if (!token) {
     return res.status(401).send({ message: "Unauthorized" });
   }
-  next();
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res.status(403).send({ message: "Forbidden" });
+  }
 };
 
 app.use(
@@ -51,6 +61,20 @@ app.use("/jobs", jobRoutes(db));
 
 app.get("/check-auth", isAuthenticated, (req, res) => {
   res.status(200).send({ message: "User is authenticated" });
+});
+
+app.get("/check-employer", isAuthenticated, (req, res) => {
+  const userId = req.user.userId;
+  if (!userId) 
+    return res.status(400).send({ error: "User ID not found" });
+
+  db.query("SELECT * FROM Employer WHERE employer_id = ?", [userId], (err, results) => {
+    if (err) {
+      console.error("Error checking employer status:", err);
+      return res.status(500).json({ error: "Error checking employer status" });
+    }
+    res.json({ isEmployer: results.length > 0 });
+  });
 });
 
 app.get("/", (req, res) => {

@@ -6,6 +6,7 @@ function JobPage() {
   const [jobs, setJobs] = useState([]);
   const [alert, setAlert] = useState({ message: "", type: "" });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isEmployer, setIsEmployer] = useState(false); // New state for employer status
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -25,17 +26,26 @@ function JobPage() {
 
   const checkAuthentication = async () => {
     try {
-      const response = await fetch("http://localhost:8080/check-auth", {
-        credentials: "include",
-      });
+      const response = await fetch("http://localhost:8080/check-auth", { credentials: "include" });
       if (response.ok) {
         setIsAuthenticated(true);
+        checkIfEmployer(); // Call to check if user is employer after authentication
       } else {
-        setIsAuthenticated(false); 
+        setIsAuthenticated(false);
       }
     } catch (error) {
       console.error("Error checking authentication:", error);
       setIsAuthenticated(false);
+    }
+  };
+
+  const checkIfEmployer = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/check-employer", { credentials: "include" });
+      const data = await response.json();
+      setIsEmployer(data.isEmployer); // Set employer status based on response
+    } catch (error) {
+      console.error("Error checking employer status:", error);
     }
   };
 
@@ -45,12 +55,10 @@ function JobPage() {
         method: "DELETE",
         credentials: "include",
       });
-
       if (response.ok) {
         setJobs(jobs.filter((job) => job.job_id !== job_id));
         setAlert({ message: "Job deletion successful!", type: "success" });
       } else {
-        console.error("Failed to delete job");
         setAlert({ message: "Job deletion unsuccessful", type: "danger" });
       }
     } catch (error) {
@@ -59,9 +67,7 @@ function JobPage() {
     }
   };
 
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
+  const handleSearchChange = (e) => setSearchQuery(e.target.value);
 
   const filteredJobs = jobs.filter((job) =>
     job.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -88,10 +94,10 @@ function JobPage() {
         <input
           type="text"
           className="form-control"
-          placeholder="Search jobs by title. (Ex:Web developer)"
+          placeholder="Search jobs by title. (Ex: Web developer)"
           value={searchQuery}
           onChange={handleSearchChange}
-          style={{ border:"2px solid grey",width: "60%", margin: "0 auto",borderRadius:"0.7rem" }}
+          style={{ border: "2px solid grey", width: "60%", margin: "0 auto", borderRadius: "0.7rem" }}
         />
       </div>
 
@@ -105,7 +111,7 @@ function JobPage() {
                 <p className="job-card-location">
                   <strong>Location:</strong> {job.location}
                 </p>
-                {isAuthenticated && (
+                {isAuthenticated && isEmployer && (
                   <button
                     className="btn btn-danger"
                     onClick={() => handleDelete(job.job_id)}
@@ -122,7 +128,7 @@ function JobPage() {
         )}
       </div>
 
-      {isAuthenticated && (
+      {isAuthenticated && isEmployer && (
         <div className="text-center mb-4">
           <Link to="/create-job" className="btn btn-primary">
             Create Jobs
