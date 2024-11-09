@@ -57,6 +57,40 @@ module.exports = (db) => {
         });
     });
 
+    router.get('/get-company-name', (req, res) => {
+        const token = req.cookies ? req.cookies.token : null;
+    
+        if (!token) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+    
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ message: "Invalid token" });
+            }
+    
+            const userId = decoded.userId;
+    
+            db.query(
+                'SELECT company_name FROM Employer WHERE employer_id = ?',
+                [userId],
+                (err, results) => {
+                    if (err) {
+                        return res.status(500).json({ error: "Database error" });
+                    }
+    
+                    if (results.length === 0) {
+                        return res.status(404).json({ message: "Employer not found" });
+                    }
+    
+                    const companyName = results[0].company_name;
+                    res.status(200).json({ company_name: companyName });
+                }
+            );
+        });
+    });
+    
+
     router.put('/update', (req, res) => {
         const { profile_id, exp, bio, skills, street, city, pincode, DOB } = req.body;
 

@@ -8,6 +8,8 @@ function ProfilePage() {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isEmployer, setIsEmployer] = useState(false);
+  const [companyName, setCompanyName] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,6 +35,40 @@ function ProfilePage() {
     };
 
     fetchUserProfile();
+  }, []);
+
+  useEffect(() => {
+    const checkEmployerStatus = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/check-employer", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to check employer status");
+        }
+
+        const data = await response.json();
+        setIsEmployer(data.isEmployer);
+
+        if (data.isEmployer) {
+          const companyResponse = await fetch("http://localhost:8080/profile/get-company-name", {
+            method: "GET",
+            credentials: "include",
+          });
+
+          if (companyResponse.ok) {
+            const companyData = await companyResponse.json();
+            setCompanyName(companyData.company_name); 
+          }
+        }
+      } catch (error) {
+        console.error("Error checking employer status:", error);
+      }
+    };
+
+    checkEmployerStatus();
   }, []);
 
   const handleLogout = async () => {
@@ -85,7 +121,7 @@ function ProfilePage() {
     return <div className="mt-5 mb-5" style={{textAlign:"center"}}>
       <img src="media/images/no-data.png" alt="No data" />
       <h2>No Data Found</h2>
-      <OpenAccount/>
+      <OpenAccount />
     </div>;
   }
 
@@ -127,8 +163,19 @@ function ProfilePage() {
                       </div>
                       <h6 className="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Biography</h6>
                       <p className="text-muted f-w-400">{renderInfo(profile.bio)}</p>
-                      <h6 className="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Skills</h6>
-                      <p className="text-muted f-w-400">{renderInfo(profile.skills)}</p>
+                      
+                      {isEmployer ? (
+                        <>
+                          <h6 className="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Company</h6>
+                          <p className="text-muted f-w-400">{renderInfo(companyName)}</p>
+                        </>
+                      ) : (
+                        <>
+                          <h6 className="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Skills</h6>
+                          <p className="text-muted f-w-400">{renderInfo(profile.skills)}</p>
+                        </>
+                      )}
+
                       <h6 className="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Address</h6>
                       <p className="text-muted f-w-400">
                         {renderInfo(profile.street)}, {renderInfo(profile.city)},{' '}
@@ -140,27 +187,9 @@ function ProfilePage() {
                       {profile.DOB && (
                         <>
                           <h6 className="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Age</h6>
-                          <p className="text-muted f-w-400">{calculateAge(profile.DOB)} years old</p>
+                          <p className="text-muted f-w-400">{calculateAge(profile.DOB)}</p>
                         </>
                       )}
-
-                      <ul className="social-link list-unstyled m-t-40 m-b-10">
-                        <li>
-                          <a href="#!" data-toggle="tooltip" title="facebook">
-                            <i className="mdi mdi-facebook feather icon-facebook facebook"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#!" data-toggle="tooltip" title="twitter">
-                            <i className="mdi mdi-twitter feather icon-twitter twitter"></i>
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#!" data-toggle="tooltip" title="instagram">
-                            <i className="mdi mdi-instagram feather icon-instagram instagram"></i>
-                          </a>
-                        </li>
-                      </ul>
                     </div>
                   </div>
                 </div>
@@ -172,7 +201,11 @@ function ProfilePage() {
 
       <h4>
         <center>
-          <button className="btn btn-primary" style={{padding:"10px"}}><Link to="/editProfile" style={{textDecoration:"none",color:"white",padding:"10px"}}> Edit Your Profile </Link></button>
+          <button className="btn btn-primary" style={{ padding: "10px" }}>
+            <Link to="/editProfile" style={{ textDecoration: "none", color: "white", padding: "10px" }}>
+              Edit Your Profile
+            </Link>
+          </button>
         </center>
       </h4>
 
