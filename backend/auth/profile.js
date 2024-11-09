@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 module.exports = (db) => {
-    // Route to fetch the profile and company name
     router.get('/', (req, res) => {
         const token = req.cookies ? req.cookies.token : null;
 
@@ -58,7 +57,6 @@ module.exports = (db) => {
         });
     });
 
-    // Route to fetch the company name for employers
     router.get('/get-company-name', (req, res) => {
         const token = req.cookies ? req.cookies.token : null;
 
@@ -72,7 +70,7 @@ module.exports = (db) => {
             }
 
             const userId = decoded.userId;
-            console.log("Fetching company name for employer ID:", userId);  // Debug log
+            console.log("Fetching company name for employer ID:", userId);  
 
             db.query(
                 'SELECT company_name FROM Employer WHERE employer_id = ?',
@@ -95,7 +93,6 @@ module.exports = (db) => {
         });
     });
 
-    // Update profile data
     router.put('/update', (req, res) => {
         const { profile_id, exp, bio, skills, street, city, pincode, DOB } = req.body;
 
@@ -114,7 +111,6 @@ module.exports = (db) => {
         );
     });
 
-    // Update company name for employer
     router.put('/update-company-name', (req, res) => {
         const { company_name } = req.body;
 

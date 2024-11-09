@@ -12,10 +12,10 @@ function EditProfile() {
     city: "",
     pincode: "",
     DOB: "",
-    company_name: "", // Add company_name field to store employer's company name
+    company_name: "",
   });
   const [loading, setLoading] = useState(true);
-  const [isEmployer, setIsEmployer] = useState(false); // To track if the user is an employer
+  const [isEmployer, setIsEmployer] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -93,7 +93,6 @@ function EditProfile() {
         throw new Error("Failed to update profile");
       }
 
-      // If user is an employer, update the company name
       if (isEmployer && profileData.company_name) {
         const companyNameResponse = await fetch(
           "http://localhost:8080/profile/update-company-name",
