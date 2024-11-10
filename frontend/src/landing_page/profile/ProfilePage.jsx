@@ -259,10 +259,12 @@ function ProfilePage() {
         </div>
       </div>
       
-      <hr/>
-      <div className="container mt-5">
-        <JobSection/>
-      </div>
+      {!isEmployer && (
+        <div className="container mt-5">
+          <hr/>
+          <JobSection />
+        </div>
+      )}
     </>
   );
 }
