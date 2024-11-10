@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import "./JobDetails.css";
 
 function JobDetails() {
   const { job_id } = useParams();
@@ -24,11 +25,26 @@ function JobDetails() {
   }
 
   return (
-    <div className="job-details-container">
-      <h2>{job.title}</h2>
-      <p><strong>Description:</strong> {job.description}</p>
-      <p><strong>Location:</strong> {job.location}</p>
-    </div>
+    <div class="container mt-5 mb-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="job-details">
+            <div class="job-title">{job.title}</div>
+            <div class="company-name">{job.company}</div>   {/* Company name here*/}
+            <div class="job-description">
+              <p>{job.description}</p>
+            </div>
+            <div>
+              <p><b>Required Skill Set:</b></p>
+              <p>// Let it come from database </p>
+            </div>
+            <div class="text-center mt-4">
+              <button class="apply-btn">Apply Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
   );
 }
 
