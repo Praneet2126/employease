@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Job.css";
 
 function JobPage() {
@@ -8,6 +8,7 @@ function JobPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isEmployer, setIsEmployer] = useState(false); // New state for employer status
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchJobs();
@@ -16,7 +17,9 @@ function JobPage() {
 
   const fetchJobs = async () => {
     try {
-      const response = await fetch("http://localhost:8080/jobs", { credentials: "include" });
+      const response = await fetch("http://localhost:8080/jobs", {
+        credentials: "include",
+      });
       const data = await response.json();
       setJobs(data);
     } catch (error) {
@@ -26,7 +29,9 @@ function JobPage() {
 
   const checkAuthentication = async () => {
     try {
-      const response = await fetch("http://localhost:8080/check-auth", { credentials: "include" });
+      const response = await fetch("http://localhost:8080/check-auth", {
+        credentials: "include",
+      });
       if (response.ok) {
         setIsAuthenticated(true);
         checkIfEmployer(); // Call to check if user is employer after authentication
@@ -41,7 +46,9 @@ function JobPage() {
 
   const checkIfEmployer = async () => {
     try {
-      const response = await fetch("http://localhost:8080/check-employer", { credentials: "include" });
+      const response = await fetch("http://localhost:8080/check-employer", {
+        credentials: "include",
+      });
       const data = await response.json();
       setIsEmployer(data.isEmployer); // Set employer status based on response
     } catch (error) {
@@ -80,15 +87,24 @@ function JobPage() {
     }
   }, [alert]);
 
+  const handleCardClick = (job_id) => {
+    navigate(`/jobs/${job_id}`);
+  };
   return (
     <>
       {alert.message && (
-        <div className={`alert alert-${alert.type}`} role="alert" style={{ textAlign: "center" }}>
+        <div
+          className={`alert alert-${alert.type}`}
+          role="alert"
+          style={{ textAlign: "center" }}
+        >
           {alert.message}
         </div>
       )}
 
-      <h2 style={{ textAlign: "center", marginTop: "1rem" }}>Jobs open for you!</h2>
+      <h2 style={{ textAlign: "center", marginTop: "1rem" }}>
+        Jobs open for you!
+      </h2>
 
       <div className="text-center mb-4 mt-4 Job-search">
         <input
@@ -97,14 +113,24 @@ function JobPage() {
           placeholder="Search jobs by title. (Ex: Web developer)"
           value={searchQuery}
           onChange={handleSearchChange}
-          style={{ border: "2px solid grey", width: "60%", margin: "0 auto", borderRadius: "0.7rem" }}
+          style={{
+            border: "2px solid grey",
+            width: "60%",
+            margin: "0 auto",
+            borderRadius: "0.7rem",
+          }}
         />
       </div>
 
       <div className="jobs-container p-5">
         {filteredJobs.length > 0 ? (
           filteredJobs.map((job) => (
-            <div className="job-card" key={job.job_id} style={{ padding: "1rem" }}>
+            <div
+              className="job-card"
+              key={job.job_id}
+              style={{ padding: "1rem", cursor: "pointer" }}
+              onClick={() => handleCardClick(job.job_id)}
+            >
               <div className="job-card-body">
                 <h5 className="job-card-title">{job.title}</h5>
                 <p className="job-card-text">{job.description}</p>

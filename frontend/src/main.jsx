@@ -12,6 +12,7 @@ import SupportPage from './landing_page/support/SupportPage';
 import Login from './landing_page/login/login';
 import EditProfile from './landing_page/profile/EditProfile';
 import CreateJobForm from './landing_page/jobs/CreateJobForm';
+import JobDetails from './landing_page/jobs/JobDetails';
 
 import Navbar from './landing_page/Navbar';
 import Footer from './landing_page/Footer';
@@ -28,6 +29,7 @@ root.render(
       <Route path='/about' element={<AboutPage />} />
       <Route path='/jobs' element={<JobsPage />} />
       <Route path='/create-job' element={<CreateJobForm/>}/>
+      <Route path="/jobs/:job_id" element={<JobDetails />} />
       <Route path='/profile' element={<ProfilePage />} />
       <Route path='/editProfile' element={<EditProfile />} />
       <Route path='/support' element={<SupportPage />} />

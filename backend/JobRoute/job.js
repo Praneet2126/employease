@@ -30,6 +30,18 @@ module.exports = (db) => {
     });
   });
 
+  router.get("/:job_id", (req, res) => {
+    const { job_id } = req.params;
+    db.query("SELECT * FROM job WHERE job_id = ?", [job_id], (err, results) => {
+      if (err) {
+        console.error("Error fetching job details:", err);
+        res.status(500).json({ message: "Error fetching job details" });
+      } else {
+        res.json(results[0]);
+      }
+    });
+  });
+
   router.delete("/:job_id", (req, res) => {
     const { job_id } = req.params;
     const query = "DELETE FROM job WHERE job_id = ?";
