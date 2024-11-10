@@ -40,45 +40,34 @@ function ApplyForm({ jobId }) {
   };
 
   return (
-    <>
-      <hr />
-      <h3 className="fs-2" style={{ textAlign: "center" }}>
-        Apply For Job
-      </h3>
-      <div className="container">
-        <div className="row">
-          <div className="col-8">
-            <label htmlFor="name">Name:</label>
-            <input
-              type="text"
-              id="name"
-              className="form-control"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <div className="col-8">
-            <label htmlFor="resume">Resume</label>
-            <input
-              type="file"
-              id="resume"
-              className="form-control"
-              onChange={(e) => setFile(e.target.files[0])}
-            />
-          </div>
-          {error && <div className="col-8 text-danger mt-2">{error}</div>}
-          <div className="col-8 mt-3">
-            <button
-              type="submit"
-              className="btn btn-primary"
-              onClick={handleSubmit}
-            >
-              Submit Application
-            </button>
-          </div>
+    <div className="container my-5 p-4 border rounded bg-light">
+      <h3 className="text-center mb-4">Apply For Job</h3>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="name">Name:</label>
+          <input
+            type="text"
+            id="name"
+            className="form-control"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </div>
-      </div>
-    </>
+        <div className="form-group">
+          <label htmlFor="resume">Resume</label>
+          <input
+            type="file"
+            id="resume"
+            className="form-control"
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+        </div>
+        {error && <div className="text-danger my-2">{error}</div>}
+        <button type="submit" className="btn btn-primary mt-3">
+          Submit Application
+        </button>
+      </form>
+    </div>
   );
 }
 
