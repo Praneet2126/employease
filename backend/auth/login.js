@@ -28,6 +28,7 @@ module.exports = (db) => {
                 }
 
                 if (isEmployer) {
+                    // Employer login flow
                     db.query(
                         'SELECT * FROM Employer WHERE employer_id = ?',
                         [email],
@@ -51,15 +52,38 @@ module.exports = (db) => {
                         }
                     );
                 } else {
-                    const token = jwt.sign({ userId: email, role: "user" }, SECRET_KEY, { expiresIn: "1h" });
-                    res.cookie("token", token, {
-                        httpOnly: true,
-                        secure: process.env.NODE_ENV === "production",
-                        sameSite: "Strict",
-                        maxAge: 3600000
-                    });
+                    // User login flow (non-employer)
+                    db.query(
+                        'SELECT * FROM Jobseeker WHERE jobseeker_id = ?',
+                        [email],
+                        (err, results) => {
+                            if (err) {
+                                return res.status(500).json({ error: "Database error" });
+                            }
+                            if (results.length === 0) {
+                                // Insert into Jobseeker table if not already present
+                                db.query(
+                                    'INSERT INTO Jobseeker (jobseeker_id, person_id, results_id) VALUES (?, NULL, NULL)',
+                                    [email],
+                                    (err) => {
+                                        if (err) {
+                                            return res.status(500).json({ error: "Failed to add to Jobseeker" });
+                                        }
+                                    }
+                                );
+                            }
 
-                    res.status(200).json({ message: "User login successful", success: true });
+                            const token = jwt.sign({ userId: email, role: "user" }, SECRET_KEY, { expiresIn: "1h" });
+                            res.cookie("token", token, {
+                                httpOnly: true,
+                                secure: process.env.NODE_ENV === "production",
+                                sameSite: "Strict",
+                                maxAge: 3600000
+                            });
+
+                            return res.status(200).json({ message: "User login successful", success: true });
+                        }
+                    );
                 }
             }
         );

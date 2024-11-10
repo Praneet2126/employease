@@ -40,6 +40,7 @@ module.exports = (db) => {
                                     }
 
                                     if (isEmployer) {
+                                        // Insert into Employer table for employer users
                                         db.query(
                                             'INSERT INTO Employer (employer_id, company_name) VALUES (?, ?)',
                                             [email, companyName || null],
@@ -59,15 +60,25 @@ module.exports = (db) => {
                                             }
                                         );
                                     } else {
-                                        const token = jwt.sign({ userId: email }, SECRET_KEY, { expiresIn: "1h" });
-                                        res.cookie("token", token, {
-                                            httpOnly: true,
-                                            secure: process.env.NODE_ENV === "production",
-                                            sameSite: "Strict",
-                                            maxAge: 3600000
-                                        });
+                                        // Insert into Jobseeker table for non-employer users
+                                        db.query(
+                                            'INSERT INTO Jobseeker (jobseeker_id, person_id, results_id) VALUES (?, ?, NULL)',
+                                            [email, email],
+                                            (err) => {
+                                                if (err) {
+                                                    return res.status(500).json({ error: "Database error" });
+                                                }
+                                                const token = jwt.sign({ userId: email }, SECRET_KEY, { expiresIn: "1h" });
+                                                res.cookie("token", token, {
+                                                    httpOnly: true,
+                                                    secure: process.env.NODE_ENV === "production",
+                                                    sameSite: "Strict",
+                                                    maxAge: 3600000
+                                                });
 
-                                        res.status(201).json({ message: "User signed up successfully", success: true });
+                                                return res.status(201).json({ message: "User signed up successfully", success: true });
+                                            }
+                                        );
                                     }
                                 }
                             );

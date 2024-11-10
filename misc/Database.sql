@@ -8,7 +8,6 @@ CREATE TABLE Jobseeker (
     results_id VARCHAR(255),
     PRIMARY KEY (jobseeker_id),
     FOREIGN KEY (person_id) REFERENCES Person(person_id)
-    -- FOREIGN KEY (results_id) REFERENCES Results(results_id)
 );
 
 -- Table for Employer
