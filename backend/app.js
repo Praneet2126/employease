@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
 
+const jobApplicationRoute = require("./JobRoute/jobApplication");
 const signupRoute = require("./auth/signup");
 const loginRoute = require("./auth/login");
 const profileRoute = require("./auth/profile");
@@ -58,6 +59,7 @@ app.use("/signup", signupRoute(db));
 app.use("/login", loginRoute(db));
 app.use("/profile", isAuthenticated, profileRoute(db));
 app.use("/jobs", jobRoutes(db));
+app.use("/apply", isAuthenticated, jobApplicationRoute(db));
 
 app.get("/check-auth", isAuthenticated, (req, res) => {
   res.status(200).send({ message: "User is authenticated" });
