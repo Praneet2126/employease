@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import "./JobDetails.css";
 import ApplyForm from "./ApplyForm";
 
 function JobDetails() {
   const { job_id } = useParams();
   const [job, setJob] = useState(null);
+  const [applicantCount, setApplicantCount] = useState(0);
   const [showApplyForm, setShowApplyForm] = useState(false);
 
   useEffect(() => {
@@ -14,6 +14,7 @@ function JobDetails() {
         const response = await fetch(`http://localhost:8080/jobs/${job_id}`);
         const data = await response.json();
         setJob(data);
+        setApplicantCount(data.num_applicants || 0);
       } catch (error) {
         console.error("Error fetching job details:", error);
       }
@@ -24,6 +25,10 @@ function JobDetails() {
 
   const handleApplyClick = () => {
     setShowApplyForm(true);
+  };
+
+  const handleApplicantCountChange = (newCount) => {
+    setApplicantCount(newCount);
   };
 
   if (!job) {
@@ -40,12 +45,21 @@ function JobDetails() {
             <div className="job-description">
               <p>{job.description}</p>
             </div>
+
             <div>
               <p>
-                <b>Required Skill Set&nbsp;:&nbsp;</b>
+                <b>Required Skill Set: </b>
                 {job.required_skills || "Not specified"}
               </p>
             </div>
+
+            {/* Displaying applicant count */}
+            <div>
+              <p>
+                <b>Number of Applicants: </b>{applicantCount}
+              </p>
+            </div>
+
             <div className="text-center mt-4">
               <button className="apply-btn" onClick={handleApplyClick}>
                 Apply Now
@@ -55,7 +69,7 @@ function JobDetails() {
         </div>
       </div>
 
-      {showApplyForm && <ApplyForm jobId={job_id} />}
+      {showApplyForm && <ApplyForm jobId={job_id} onApplicantCountChange={handleApplicantCountChange} />}
     </div>
   );
 }

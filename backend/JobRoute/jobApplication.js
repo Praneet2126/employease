@@ -39,6 +39,7 @@ module.exports = (db) => {
                     }
 
                     console.log("Second line");
+
                     db.query(
                         "INSERT INTO Resume (resume_id, jobseeker_id, filename, submission_date) VALUES (?, ?, ?, ?)",
                         [resumeId, jobseekerId, resumeFile.buffer, submissionDate],
@@ -48,7 +49,35 @@ module.exports = (db) => {
                                 return res.status(500).json({ message: "Error saving resume.", error: err.message });
                             }
 
-                            res.status(201).json({ message: "Application submitted successfully." });
+                            // Update the number of applicants for the job
+                            db.query(
+                                "UPDATE job SET num_applicants = num_applicants + 1 WHERE job_id = ?",
+                                [jobId],
+                                (err) => {
+                                    if (err) {
+                                        console.error("Error updating applicant count:", err);
+                                        return res.status(500).json({ message: "Error updating applicant count", error: err.message });
+                                    }
+
+                                    // Fetch the updated number of applicants
+                                    db.query(
+                                        "SELECT num_applicants FROM job WHERE job_id = ?",
+                                        [jobId],
+                                        (err, result) => {
+                                            if (err) {
+                                                console.error("Error fetching updated applicant count:", err);
+                                                return res.status(500).json({ message: "Error fetching updated applicant count", error: err.message });
+                                            }
+
+                                            // Send the updated applicant count back to the frontend
+                                            res.status(201).json({
+                                                message: "Application submitted successfully.",
+                                                num_applicants: result[0].num_applicants,
+                                            });
+                                        }
+                                    );
+                                }
+                            );
                         }
                     );
                     console.log("third line");

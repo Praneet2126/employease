@@ -1,6 +1,19 @@
 const express = require("express");
 const { v4: uuidv4 } = require("uuid");
 
+// Example function to get job details including applicant count
+function getJobDetails(jobId) {
+  db.query("SELECT title, description, location, get_applicant_count(job_id) AS num_applicants FROM job WHERE job_id = ?", [jobId], function(err, result) {
+      if (err) {
+          console.error("Error retrieving job details:", err);
+          return;
+      }
+      console.log("Job details:", result);
+      console.log("Number of applicants:", result[0].num_applicants);
+  });
+}
+
+
 module.exports = (db) => {
   const router = express.Router();
 

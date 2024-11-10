@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function ApplyForm({ jobId }) {
+function ApplyForm({ jobId, onApplicantCountChange }) {
   const [name, setName] = useState("");
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
@@ -32,6 +32,11 @@ function ApplyForm({ jobId }) {
         setError(data.message || "Failed to submit application.");
       } else {
         alert("Application submitted successfully!");
+
+        // Update the applicant count in the parent component
+        if (onApplicantCountChange) {
+          onApplicantCountChange(data.num_applicants); // Assuming data.num_applicants is returned by the backend
+        }
       }
     } catch (error) {
       console.error("Error:", error);

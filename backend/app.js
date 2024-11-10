@@ -88,6 +88,33 @@ app.post("/logout", (req, res) => {
   res.status(200).send({ message: "Logged out successfully" });
 });
 
+app.get('/job/:jobId', (req, res) => {
+  const jobId = req.params.jobId; // Retrieve the job ID from the request URL
+  
+  // SQL query to get job details along with applicant count
+  db.query(
+    `SELECT title, description, location, get_applicant_count(job_id) AS num_applicants 
+     FROM job 
+     WHERE job_id = ?`,
+    [jobId],
+    (err, result) => {
+      if (err) {
+        res.status(500).json({ error: "Error retrieving job details" });
+        return;
+      }
+      if (result.length === 0) {
+        res.status(404).json({ error: "Job not found" });
+        return;
+      }
+      // Send the job details and applicant count as JSON response
+      res.json(result[0]);
+    }
+  );
+});
+
+
 app.listen(PORT, () => {
   console.log(`App is listening on PORT ${PORT}`);
 });
+
+
