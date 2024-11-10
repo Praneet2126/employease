@@ -13,7 +13,7 @@ function Hero() {
                 <img className="w-25 h-25" src="media/images/job-search-2.png" alt="JS1" />       
                 <img className="w-25 h-25" src="media/images/job-search-3.jpg" alt="JS1" />      
                 </div> 
-                <button className='p-2 btn btn-primary fs-5 mb-5' style={{width: "20%", margin: "0 auto"}}><Link to="/signup" style={{color: 'white', textDecoration: 'none'}}>Join Now</Link></button>
+                <Link to="/signup" style={{color: 'white', textDecoration: 'none'}}><button className='p-2 btn btn-primary fs-5 mb-5' style={{width: "20%", margin: "0 auto"}}>Join Now</button></Link>
             </div>
             </center>
         </div>
