@@ -16,11 +16,11 @@ module.exports = (db) => {
   });
 
   router.post("/", (req, res) => {
-    const { title, description, location } = req.body;
+    const { title, description, required_skills, location } = req.body;
     const job_id = uuidv4();
 
-    const query = "INSERT INTO job (job_id, title, description, location) VALUES (?, ?, ?, ?)";
-    db.query(query, [job_id, title, description, location], (err) => {
+    const query = "INSERT INTO job (job_id, title, description, location, required_skills) VALUES (?, ?, ?, ?, ?)";
+    db.query(query, [job_id, title, description, location, required_skills], (err) => {
       if (err) {
         console.error("Error creating job:", err);
         res.status(500).json({ message: "Error creating job" });

@@ -36,7 +36,7 @@ function JobDetails() {
             </div>
             <div>
               <p><b>Required Skill Set:</b></p>
-              <p>// Let it come from database </p>
+              <div>{job.required_skills}</div>
             </div>
             <div class="text-center mt-4">
               <button class="apply-btn">Apply Now</button>

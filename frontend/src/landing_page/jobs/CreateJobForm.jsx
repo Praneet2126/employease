@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 function CreateJobForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [required_skills, setRequiredSkills] = useState("");
   const [location, setLocation] = useState("");
   const navigate = useNavigate();
 
@@ -14,7 +15,7 @@ function CreateJobForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ title, description, location }),
+        body: JSON.stringify({ title, description, required_skills, location }),
       });
 
       if (response.ok) {
@@ -47,6 +48,15 @@ function CreateJobForm() {
             className="form-control"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Required Skill Set</label>
+          <textarea
+            className="form-control"
+            value={required_skills}
+            onChange={(e) => setRequiredSkills(e.target.value)}
             required
           />
         </div>
