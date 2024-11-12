@@ -69,5 +69,33 @@ module.exports = (db) => {
     });
   });
 
+  router.get("/applied-jobs/:jobseeker_id", async (req, res) => {
+    const { jobseeker_id } = req.params;
+    console.log(jobseeker_id)
+
+    try {
+      const query = `
+        SELECT 
+            j.job_id, 
+            j.title, 
+            j.description, 
+            j.location
+        FROM 
+            Job j
+        INNER JOIN 
+            jobseeker_search_job jsj ON j.job_id = jsj.job_id
+        WHERE 
+            jsj.jobseeker_id = ?;
+      `;
+      
+      const [rows] = await db.promise().query(query, [jobseeker_id]);
+      res.json(rows); // Send job data as JSON response
+    } catch (error) {
+      console.error("Error fetching applied jobs:", error);
+      res.status(500).json({ error: "Error retrieving applied jobs." });
+    }
+  });
+  
+
   return router;
 };

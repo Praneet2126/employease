@@ -264,7 +264,7 @@ function ProfilePage() {
       {!isEmployer && (
         <div className="container mt-5">
           <hr/>
-          <JobSection />
+          <JobSection jobseeker_id={profile.profile_id}/>
         </div>
       )}
     </>
