@@ -4,6 +4,7 @@ import Hero from "./Hero.jsx";
 import "./Profile.css";
 import OpenAccount from "../OpenAccount.jsx";
 import JobSection from "./JobSection.jsx";
+import ProfileSection from "./ProfileSection.jsx";
 
 function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -150,9 +151,10 @@ function ProfilePage() {
                             alt="User-Profile-Image"
                           />
                         </div>
-                        <h6 className="f-w-600">
+                        <h5 className="f-w-600">
                           {renderInfo(profile.profile_id)}
-                        </h6>
+                        </h5>
+                        <ProfileSection jobseeker_id={profile.profile_id}/>
                         <p>{renderInfo(profile.exp)}</p>
                         <i className="mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
                       </div>

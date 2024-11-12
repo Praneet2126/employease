@@ -150,5 +150,33 @@ module.exports = (db) => {
         });
     });
 
+    router.get('/:jobseeker_id', (req, res) => {
+        const jobseekerId = req.params.jobseeker_id;
+        const query = `
+            SELECT 
+                j.jobseeker_id, 
+                COUNT(jsj.job_id) AS applied_jobs_count
+            FROM 
+                jobseeker_search_job jsj
+            JOIN 
+                Jobseeker j ON jsj.jobseeker_id = j.jobseeker_id
+            WHERE 
+                j.jobseeker_id = ?
+            GROUP BY 
+                j.jobseeker_id;
+        `;
+
+        db.query(query, [jobseekerId], (err, result) => {
+            if (err) {
+                console.log(err);
+                res.status(500).send('Error retrieving job application count');
+            } else {
+                console.log(result);
+                res.json(result);  // Send back the applied job count to the frontend
+            }
+        });
+    });
+    
+
     return router;
 };
