@@ -95,6 +95,32 @@ module.exports = (db) => {
       res.status(500).json({ error: "Error retrieving applied jobs." });
     }
   });
+
+  router.get("/applied-people/:job_id", async (req, res) => {
+    const { job_id } = req.params;
+  
+    try {
+      const query = `
+        SELECT 
+            jobseeker_id,
+            (SELECT firstname FROM Person WHERE person_id = (SELECT person_id FROM Jobseeker WHERE jobseeker_id = jsj.jobseeker_id)) AS firstname,
+            (SELECT lastname FROM Person WHERE person_id = (SELECT person_id FROM Jobseeker WHERE jobseeker_id = jsj.jobseeker_id)) AS lastname,
+            (SELECT skills FROM Profile WHERE profile_id = (SELECT profile_id FROM Person WHERE person_id = (SELECT person_id FROM Jobseeker WHERE jobseeker_id = jsj.jobseeker_id))) AS skills,
+            (SELECT exp FROM Profile WHERE profile_id = (SELECT profile_id FROM Person WHERE person_id = (SELECT person_id FROM Jobseeker WHERE jobseeker_id = jsj.jobseeker_id))) AS exp
+        FROM 
+            jobseeker_search_job jsj
+        WHERE 
+            jsj.job_id = ?;
+      `;
+  
+      const [rows] = await db.promise().query(query, [job_id]);
+      res.json(rows); // Send jobseeker data as JSON response
+    } catch (error) {
+      console.error("Error fetching applied people:", error);
+      res.status(500).json({ error: "Error retrieving applied people." });
+    }
+  });
+  
   
 
   return router;

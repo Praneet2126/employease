@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ApplyForm from "./ApplyForm";
+import AppliedPeople from "./AppliedPeople";
 import "./JobDetails.css";
 
 function JobDetails() {
@@ -71,6 +72,8 @@ function JobDetails() {
       </div>
 
       {showApplyForm && <ApplyForm jobId={job_id} onApplicantCountChange={handleApplicantCountChange} />}
+
+      <AppliedPeople jobId={job_id}/>
     </div>
   );
 }
