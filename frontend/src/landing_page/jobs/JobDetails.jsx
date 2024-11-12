@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ApplyForm from "./ApplyForm";
+import "./JobDetails.css";
 
 function JobDetails() {
   const { job_id } = useParams();
